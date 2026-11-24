@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مهدیار | تحلیل هوشمند کدال</title>
+<style>
+:root{color-scheme:dark;--bg:#0a1220;--p:#121f33;--p2:#192b43;--l:#2c405c;--t:#eef5ff;--m:#9fb0c8;--g:#3ad5a2;--b:#83bdff;--r:#ff9292}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#1a3856,transparent 38%),var(--bg);color:var(--t);font-family:Tahoma,Arial,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#3ad5a2,#167b82);display:grid;place-items:center;color:#06251e;font-weight:bold;font-size:24px}
+h1{font-size:21px;margin:0}.sub,.muted{font-size:12px;color:var(--m);line-height:2}.pill{border:1px solid #315b54;background:#10372e;color:#9cf0d0;border-radius:30px;padding:8px 13px;font-size:12px}
+.pill.demo{border-color:#6b5a2a;background:#3a2f10;color:#ffd98a}.pill.bad{border-color:#6b2a2a;background:#3a1010;color:var(--r)}
+.panel{margin-top:14px;background:linear-gradient(145deg,#14243a,#101b2c);border:1px solid var(--l);border-radius:16px;padding:16px;position:relative}
+.controls{display:flex;gap:10px;flex-wrap:wrap}input,select{background:#0a1526;color:#fff;border:1px solid #344b68;border-radius:11px;padding:12px;font-size:14px;min-width:0;font-family:inherit}input{flex:1}
+button{background:var(--g);color:#06251d;border:0;border-radius:11px;padding:12px 18px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit}button:disabled{opacity:.55}
+button.sec{background:#234363;color:#e8f3ff}.status{margin-top:12px;padding:11px;background:#0a1728;border:1px solid #293f5b;border-radius:11px;line-height:1.9;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}.card{background:var(--p2);border:1px solid var(--l);border-radius:12px;padding:12px}.card small{color:var(--m)}.card strong{display:block;font-size:17px;margin-top:6px}
+.tb{overflow:auto;margin-top:12px}table{border-collapse:collapse;width:100%;min-width:700px;font-size:12px}th,td{text-align:right;padding:9px;border-bottom:1px solid var(--l);line-height:1.8}th{background:#1b2e48;color:#b8d6fa}
+a{color:var(--b);text-decoration:none}.empty{padding:22px;text-align:center;color:var(--m)}.danger{color:var(--r)}.good{color:#83efc5}.warn{color:#ffd98a}
+details{margin-top:12px;font-size:12px;color:var(--m)}summary{cursor:pointer}details .controls{margin-top:8px}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.sh h3{margin:0}
+footer{text-align:center;color:#8396af;font-size:11px;padding:20px;line-height:2}
+.hl{position:relative;z-index:1001;box-shadow:0 0 0 4px var(--g),0 0 0 9999px #000a!important;border-radius:14px}
+#tour{display:none;position:fixed;z-index:1002;bottom:14px;right:50%;transform:translateX(50%);width:min(92vw,440px);background:#fff;color:#102030;border-radius:16px;padding:16px;box-shadow:0 10px 40px #000a}
+#tour h4{margin:0 0 6px;font-size:15px}#tour p{margin:0 0 12px;font-size:13px;line-height:2}#tour .row{display:flex;gap:8px;justify-content:space-between;align-items:center}#tour small{color:#667}
+#tour button{padding:8px 14px}#tour .x{background:#e5ebf2;color:#234}
+@media(max-width:620px){.controls{display:grid}button{width:100%}}
+</style></head>
+<body><main class="wrap">
+<header class="top"><div class="brand"><div class="logo">م</div><div><h1>مهدیار | تحلیل هوشمند کدال</h1><div class="sub">دریافت اطلاعیه‌ها و جداول مالی از گزارش‌های ناشران</div></div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="sec" onclick="startTour()">🧭 شروع وب‌تور</button><span class="pill" id="health">در حال بررسی…</span></div></header>
+
+<section class="panel" id="p-search">
+<h3 style="margin:0 0 12px">انتخاب نماد و دریافت گزارش‌ها</h3>
+<div class="controls">
+<input id="symbol" value="نوری" placeholder="نماد؛ مثل نوری، وبملت، فملی">
+<select id="type"><option value="-1">همه اطلاعیه‌ها</option><option value="6" selected>صورت‌های مالی (کد ۶)</option><option value="58">گزارش فعالیت ماهانه (کد ۵۸)</option></select>
+<button id="search" onclick="searchCodal()">دریافت از کدال</button></div>
+<details><summary>تنظیمات اتصال</summary><div class="controls"><input id="base" dir="ltr" placeholder="آدرس سرور مهدیار، مثل http://127.0.0.1:10000"><button class="sec" onclick="health()">بررسی اتصال</button></div>
+<div class="muted">کدال اجازهٔ اتصال مستقیم از مرورگر را نمی‌دهد (CORS)؛ برای داده زنده، فایل پایتون مهدیار را اجرا کنید تا واسطه شود. در غیر این صورت، صفحه به حالت نمایشی می‌رود و آن را با برچسب زرد مشخص می‌کند.</div></details>
+<div class="status" id="status">آماده دریافت گزارش.</div>
+<div class="cards"><div class="card"><small>نماد انتخابی</small><strong id="symbolCard">نوری</strong></div><div class="card"><small>شرکت</small><strong id="company">—</strong></div><div class="card"><small>تعداد گزارش‌ها</small><strong id="count">—</strong></div><div class="card"><small>وضعیت</small><strong id="state">در انتظار</strong></div></div>
+<div id="results" class="empty">پس از دریافت، گزارش‌ها اینجا نمایش داده می‌شوند.</div>
+</section>
+
+<section class="panel" id="reportPanel" hidden>
+<div class="sh"><h3 id="reportTitle">جداول گزارش</h3><select id="sheet" onchange="loadSheet()"><option value="0">برگه ۱</option><option value="1">برگه ۲</option><option value="2">برگه ۳</option><option value="3">برگه ۴</option></select></div>
+<div class="status" id="reportStatus">یک گزارش انتخاب کنید.</div><div id="tables" class="empty">جدولی بارگذاری نشده است.</div>
+</section>
+<footer id="foot">منبع داده: کدال · داده‌ها بدون تغییر نمایش داده می‌شوند.<br>تا زمانی که عنوان ستون، دوره و واحد با سند تطبیق نشود، نسبت یا عدد تحلیلی ساخته نمی‌شود.</footer>
+</main>
+
+<div id="tour"><h4 id="tt"></h4><p id="tp"></p><div class="row"><small id="tn"></small><span><button class="x" onclick="endTour()">بستن</button> <button class="x" onclick="stepTour(-1)">قبلی</button> <button onclick="stepTour(1)" id="tnext">بعدی</button></span></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let sym="نوری",tracing="",mode="unknown";
+$("base").value=location.protocol.startsWith("http")?"":"http://127.0.0.1:10000";
+const base=()=>$("base").value.trim().replace(/\/$/,"");
+
+function setMode(m){mode=m;const h=$("health");
+ h.className="pill"+(m==="demo"?" demo":m==="off"?" bad":"");
+ h.textContent=m==="live"?"اتصال زنده به کدال (از طریق سرور مهدیار)":m==="direct"?"اتصال مستقیم به کدال":m==="demo"?"حالت نمایشی (داده نمونه)":"سرور در دسترس نیست"}
+async function tj(url,ms=15000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(url,{signal:c.signal});return await r.json()}finally{clearTimeout(t)}}
+async function health(){try{const j=await tj(base()+"/api/health",4000);if(j.ok){setMode("live");return}}catch(e){}setMode("demo")}
+
+/* ---- Demo data (NOT real Codal data) ---- */
+const DEMO={company:"شرکت نمونه (نمایشی)",reports:[
+ {title:"صورت‌های مالی میان‌دوره‌ای ۶ ماهه (نمونه)",date:"۱۴۰۵/۰۵/۳۰",tracing_no:"D1",letter_code:"ن-۱۰",has_excel:true,page_url:"https://www.codal.ir/"},
+ {title:"صورت‌های مالی سالانه حسابرسی‌شده (نمونه)",date:"۱۴۰۴/۱۲/۲۵",tracing_no:"D2",letter_code:"ن-۱۰",has_excel:true,page_url:"https://www.codal.ir/"},
+ {title:"صورت‌های مالی میان‌دوره‌ای ۳ ماهه (نمونه)",date:"۱۴۰۴/۰۲/۳۱",tracing_no:"D3",letter_code:"ن-۱۰",has_excel:false,page_url:"https://www.codal.ir/"}]};
+const DEMO_TABLE=[["شرح","دوره جاری","دوره قبل"],["درآمد عملیاتی","۱۰۰ (نمونه)","۹۰ (نمونه)"],["بهای تمام‌شده","۶۰ (نمونه)","۵۵ (نمونه)"],["سود ناخالص","۴۰ (نمونه)","۳۵ (نمونه)"]];
+
+async function searchCodal(){
+ const s=$("symbol").value.trim(),type=$("type").value;if(!s){$("status").textContent="نماد را وارد کنید.";return}
+ sym=s;$("symbolCard").textContent=s;$("state").textContent="در حال اتصال";$("count").textContent="…";$("company").textContent="—";$("reportPanel").hidden=true;
+ $("results").innerHTML='<div class="empty">در حال دریافت…</div>';$("status").textContent="در حال دریافت فهرست از کدال…";
+ const b=$("search");b.disabled=true;
+ let j=null,note="";
+ try{j=await tj(base()+"/api/search?symbol="+encodeURIComponent(s)+"&type="+type);if(!j.ok)throw Error(j.error||"خطا");setMode("live")}
+ catch(e1){
+  if(String(e1.message).includes("کدال")){ $("status").innerHTML='<span class="danger">خطا:</span> '+esc(e1.message);$("state").textContent="ناموفق";b.disabled=false;return}
+  try{ // direct attempt (usually blocked by CORS)
+   const q=new URLSearchParams({Symbol:s,LetterType:type,PageNumber:1,Audited:true,NotAudited:true,IsNotAudited:false,Consolidatable:true,NotConsolidatable:true,Childs:false,Mains:true,CompanyState:-1,CompanyType:-1,AuditorRef:-1,Category:type==="6"?1:type==="58"?3:-1,Length:-1,TracingNo:-1,Publisher:false,search:true});
+   const p=await tj("https://search.codal.ir/api/search/v2/q?"+q,12000);
+   j={ok:true,total:p.Total,reports:(p.Letters||[]).map(l=>({title:l.Title,date:l.PublishDateTime,tracing_no:String(l.TracingNo||""),letter_code:l.LetterCode,company:l.CompanyName,has_excel:!!l.HasExcel,page_url:"https://www.codal.ir"+(l.Url||"")}))};setMode("direct")
+  }catch(e2){j={ok:true,demo:true,total:3,reports:DEMO.reports.map(x=>({...x,company:DEMO.company}))};setMode("demo");note=" (اتصال زنده ممکن نشد؛ داده نمونه نمایش داده می‌شود)"}
+ }
+ const a=j.reports||[];$("count").textContent=j.total??a.length;$("company").textContent=a[0]?.company||"—";$("state").textContent=j.demo?"نمایشی":"موفق";
+ $("status").innerHTML=j.demo?'<span class="warn">حالت نمایشی:</span> این داده‌ها واقعی نیستند.'+esc(note):'<span class="good">پاسخ از کدال دریافت شد.</span> '+esc(new Date().toLocaleString("fa-IR"));
+ $("results").innerHTML=a.length?'<div class="tb"><table><thead><tr><th>ردیف</th><th>عنوان گزارش</th><th>تاریخ</th><th>شماره پیگیری</th><th>کد نامه</th><th>مستند</th></tr></thead><tbody>'+a.map((x,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.date)+'</td><td>'+esc(x.tracing_no)+'</td><td>'+esc(x.letter_code)+'</td><td>'+(x.has_excel?'<button class="sec" onclick="openReport(\''+esc(x.tracing_no)+'\')">استخراج جدول</button>':'<span class="muted">Excel ندارد</span>')+' <a target="_blank" rel="noopener" href="'+esc(x.page_url)+'">صفحه کدال</a></td></tr>').join("")+'</tbody></table></div>':'<div class="empty">گزارشی برنگشت.</div>';
+ b.disabled=false;
+}
+async function openReport(t){tracing=t;$("reportPanel").hidden=false;$("sheet").value="0";await loadSheet();$("reportPanel").scrollIntoView({behavior:"smooth"})}
+async function loadSheet(){
+ const sh=$("sheet").value;$("reportTitle").textContent="جداول گزارش "+tracing;$("tables").innerHTML='<div class="empty">در حال پردازش…</div>';
+ const show=(ts,msg)=>{$("reportStatus").innerHTML=msg;$("tables").innerHTML=ts.map((t,i)=>'<h4>جدول '+(i+1)+'</h4><div class="tb"><table><tbody>'+t.map((r,ri)=>'<tr>'+r.map(c=>ri?'<td>'+esc(c)+'</td>':'<th>'+esc(c)+'</th>').join("")+'</tr>').join("")+'</tbody></table></div>').join("")};
+ if(mode==="demo"||/^D\d/.test(tracing)){show([DEMO_TABLE],'<span class="warn">جدول نمونه:</span> اعداد واقعی نیستند.');return}
+ try{const j=await tj(base()+"/api/report?symbol="+encodeURIComponent(sym)+"&tracingNo="+encodeURIComponent(tracing)+"&sheet="+sh,50000);if(!j.ok)throw Error(j.error||"ناموفق");
+  show(j.report.tables,'<span class="good">جدول از Excel کدال استخراج شد.</span> · '+esc(j.report.company)+' · '+esc(j.report.publish_date)+' · <a target="_blank" rel="noopener" href="'+esc(j.report.page_url)+'">سند اصلی</a>')}
+ catch(e){$("reportStatus").innerHTML='<span class="danger">خطا:</span> '+esc(e.message);$("tables").innerHTML='<div class="empty">استخراج انجام نشد (استخراج جدول به سرور مهدیار نیاز دارد).</div>'}
+}
+
+/* ---- Guided tour ---- */
+const STEPS=[
+ ["p-search","به مهدیار خوش آمدید","این ابزار گزارش‌ها و جداول مالی شرکت‌ها را از سامانهٔ کدال (سامانهٔ رسمی اطلاع‌رسانی ناشران بورس) دریافت می‌کند."],
+ ["symbol","۱) نماد","نماد شرکت را بنویسید؛ مثل نوری، وبملت یا فملی."],
+ ["type","۲) نوع اطلاعیه","صورت‌های مالی (کد ۶)، گزارش فعالیت ماهانه (کد ۵۸) یا همهٔ اطلاعیه‌ها."],
+ ["search","۳) دریافت","درخواست به کدال فرستاده می‌شود. اگر اتصال زنده نباشد، حالت نمایشی با برچسب زرد فعال می‌شود تا شفاف بماند."],
+ ["results","۴) نتایج","فهرست گزارش‌ها با تاریخ، شمارهٔ پیگیری و لینک به صفحهٔ اصلی کدال. با «استخراج جدول»، جدول‌های فایل Excel گزارش باز می‌شود."],
+ ["foot","اصل شفافیت","داده‌ها بدون تغییر نمایش داده می‌شوند و تا تطبیق ستون، دوره و واحد با سند، هیچ نسبت تحلیلی ساخته نمی‌شود."]];
+let ti=-1,cur=null;
+function startTour(){ti=-1;$("tour").style.display="block";stepTour(1)}
+function endTour(){$("tour").style.display="none";cur&&cur.classList.remove("hl");cur=null}
+function stepTour(d){ti+=d;if(ti<0)ti=0;if(ti>=STEPS.length){endTour();return}
+ cur&&cur.classList.remove("hl");const s=STEPS[ti];cur=$(s[0]);cur.classList.add("hl");cur.scrollIntoView({behavior:"smooth",block:"center"});
+ $("tt").textContent=s[1];$("tp").textContent=s[2];$("tn").textContent=(ti+1)+" از "+STEPS.length;$("tnext").textContent=ti===STEPS.length-1?"پایان":"بعدی"}
+$("symbol").addEventListener("keydown",e=>{if(e.key==="Enter")searchCodal()});
+health();
+</script></body></html>
